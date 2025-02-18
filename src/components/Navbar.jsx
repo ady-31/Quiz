@@ -2,9 +2,14 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Nav = styled.nav`
-  background: white;
+  background: var(--card-background);
   padding: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.9);
 `;
 
 const NavContainer = styled.div`
@@ -17,9 +22,17 @@ const NavContainer = styled.div`
 `;
 
 const Logo = styled.h1`
-  color: var(--primary-color);
-  font-size: 1.5rem;
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.8rem;
+  font-weight: 800;
   margin: 0;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const NavLinks = styled.div`
@@ -29,15 +42,36 @@ const NavLinks = styled.div`
 
 const NavLink = styled(Link)`
   text-decoration: none;
-  color: ${props => props.$active ? 'var(--primary-color)' : 'var(--text-color)'};
-  font-weight: ${props => props.$active ? '600' : '400'};
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: all 0.2s;
+  color: var(--text-color);
+  font-weight: 500;
+  padding: 0.5rem 1.2rem;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+  position: relative;
+  background: ${props => props.$active ? 'linear-gradient(135deg, var(--gradient-start), var(--gradient-end))' : 'transparent'};
+  color: ${props => props.$active ? 'white' : 'var(--text-color)'};
 
   &:hover {
-    color: var(--primary-color);
-    background: rgba(37, 99, 235, 0.1);
+    transform: translateY(-2px);
+    background: ${props => props.$active ? 
+      'linear-gradient(135deg, var(--gradient-start), var(--gradient-end))' : 
+      'rgba(99, 102, 241, 0.1)'};
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover::after {
+    transform: ${props => props.$active ? 'scaleX(0)' : 'scaleX(1)'};
   }
 `;
 
@@ -47,13 +81,13 @@ const Navbar = () => {
   return (
     <Nav>
       <NavContainer>
-        <Logo>Quiz Platform</Logo>
+        <Logo>QuizMaster</Logo>
         <NavLinks>
           <NavLink to="/" $active={location.pathname === '/'}>
-            Quiz
+            Take Quiz
           </NavLink>
           <NavLink to="/history" $active={location.pathname === '/history'}>
-            History
+            My Progress
           </NavLink>
         </NavLinks>
       </NavContainer>
